@@ -1,0 +1,42 @@
+name: Windows build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        runtime: [win-x64, win-arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore GitHubProjectPublisher.sln
+      - name: Test
+        run: dotnet test GitHubProjectPublisher.sln -c Release --no-restore --logger trx
+      - name: Restore ${{ matrix.runtime }} runtime pack
+        run: dotnet restore src/ProjectPublisher.App/ProjectPublisher.App.csproj -r ${{ matrix.runtime }}
+      - name: Publish ${{ matrix.runtime }}
+        shell: pwsh
+        run: >-
+          dotnet publish src/ProjectPublisher.App/ProjectPublisher.App.csproj
+          -c Release -r ${{ matrix.runtime }} --self-contained true --no-restore
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -o artifacts/${{ matrix.runtime }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ProjectPublisher-${{ matrix.runtime }}
+          path: artifacts/${{ matrix.runtime }}/
+          if-no-files-found: error

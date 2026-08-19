@@ -1,0 +1,47 @@
+<Window x:Class="ProjectPublisher.DeviceLoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Connect GitHub" Width="510" Height="390"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Width="52" Height="52" CornerRadius="14" Background="{StaticResource AccentBrush}" HorizontalAlignment="Left">
+            <TextBlock Text="GH" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <TextBlock Grid.Row="1" Text="Authorize Project Publisher" FontSize="24" FontWeight="SemiBold" Margin="0,18,0,6"/>
+        <TextBlock Grid.Row="2" Text="GitHub will ask you to approve repository access. Your password is never shared with this app."
+                   Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"/>
+
+        <Border Grid.Row="3" Background="#0E1528" CornerRadius="10" Margin="0,20,0,12" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="DEVICE CODE" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                    <TextBlock x:Name="CodeText" FontFamily="Consolas" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" x:Name="CopyButton" Content="Copy" Style="{StaticResource SecondaryButton}" Click="Copy_Click"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="4">
+            <Button Content="Open github.com/login/device" Style="{StaticResource PrimaryButton}" Click="Open_Click"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+                <ProgressBar IsIndeterminate="True" Width="80" Height="4" Foreground="{StaticResource Accent2Brush}"/>
+                <TextBlock Text="Waiting for approval…" Foreground="{StaticResource MutedBrush}" Margin="10,-7,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Button Grid.Row="5" Content="Cancel" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Click="Cancel_Click"/>
+    </Grid>
+</Window>
