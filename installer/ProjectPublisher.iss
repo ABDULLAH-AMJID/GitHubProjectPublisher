@@ -1,5 +1,5 @@
 #define MyAppName "NEON GIT Project Publisher"
-#define MyAppVersion "0.2.0"
+#define MyAppVersion "0.2.2"
 #define MyAppPublisher "Project Publisher"
 #define MyAppExeName "ProjectPublisher.exe"
 

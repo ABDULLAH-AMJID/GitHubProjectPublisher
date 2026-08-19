@@ -68,7 +68,7 @@ public sealed class StagingService
                 if (UploadPolicy.IsProbablyText(sourceFile))
                 {
                     var content = await File.ReadAllTextAsync(sourceFile, cancellationToken);
-                    var result = _scanner.RedactContent(content);
+                    var result = _scanner.RedactContent(content, sourceFile);
                     redacted += result.RedactionCount;
                     await File.WriteAllTextAsync(destinationFile, result.Content, new UTF8Encoding(false), cancellationToken);
                 }

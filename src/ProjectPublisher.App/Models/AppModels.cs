@@ -92,6 +92,7 @@ public sealed class TokenBundle
     public required string AccessToken { get; init; }
     public string? RefreshToken { get; init; }
     public DateTimeOffset? ExpiresAtUtc { get; init; }
+    public string? GrantedScopes { get; init; }
 }
 
 public sealed class GitHubUser

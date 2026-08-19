@@ -1,4 +1,4 @@
-# NEON GIT // Project Publisher v0.2
+# NEON GIT // Project Publisher v0.2.2
 
 A native Windows GitHub publishing application with a professional cyberpunk WPF interface and a real command-driven Git backend.
 
@@ -119,7 +119,7 @@ ARM64:
 5. Register and copy the **Client ID**.
 6. Paste only that Client ID into Project Publisher and click **Connect GitHub**.
 
-Never embed a Client Secret in this desktop app. The current device flow requests `repo read:user` so it can create/update public and private repositories and identify the commit author.
+Never embed a Client Secret in this desktop app. The current device flow requests `repo read:user workflow` so it can create/update public and private repositories, identify the commit author, and add/update files under `.github/workflows/`.
 
 ## Publishing workflow
 
@@ -214,4 +214,4 @@ tests/ProjectPublisher.Tests/
   GitCommandPipelineTests.cs           Real local Git init/commit/push test
 ```
 
-See [SECURITY.md](SECURITY.md), [architecture.md](docs/architecture.md), and [VALIDATION.md](VALIDATION.md).
+Start with the [Complete Beginner Guide](docs/BEGINNER_GUIDE.md). Also see [SECURITY.md](SECURITY.md), [architecture.md](docs/architecture.md), and [VALIDATION.md](VALIDATION.md).

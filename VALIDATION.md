@@ -1,6 +1,18 @@
-# Validation record — v0.2
+# Validation record — v0.2.2
 
 Validation performed in the workspace on 2026-08-17.
+
+## OAuth workflow-scope fix
+
+Version 0.2.2 requests and records `repo read:user workflow`. Saved tokens that do not contain all required scopes are no longer silently restored. This allows the Git command pipeline to add/update `.github/workflows/*.yml` files after the user reconnects and approves the new permission.
+
+The scanner also skips `artifacts/` and narrows generic assignment matching to reduce code-reference/test-fixture false positives.
+
+## Playwright single-file packaging fix
+
+Version 0.2.1 explicitly extracts bundled Playwright content for the self-contained executable and removes the standalone `playwright.ps1` from publish output. That script requires a loose `Microsoft.Playwright.dll` and is not usable beside a single-file executable. The app targets installed Microsoft Edge directly, so end users do not run a browser-install script.
+
+Validated publish output contains `ProjectPublisher.exe` and symbols only; no broken standalone script remains.
 
 ## Windows-targeted solution build
 

@@ -46,4 +46,5 @@ node_modules/
 venv/
 bin/
 obj/
+artifacts/
 __pycache__/

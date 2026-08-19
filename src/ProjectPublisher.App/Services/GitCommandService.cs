@@ -114,8 +114,13 @@ public sealed class GitCommandService
         {
             details += "\nThe remote contains commits that are not in this folder. Use Fetch/Pull and resolve conflicts; force-push is intentionally disabled.";
         }
-        if (details.Contains("Authentication failed", StringComparison.OrdinalIgnoreCase) ||
-            details.Contains("403", StringComparison.OrdinalIgnoreCase))
+        if (details.Contains("without `workflow` scope", StringComparison.OrdinalIgnoreCase) ||
+            details.Contains("without 'workflow' scope", StringComparison.OrdinalIgnoreCase))
+        {
+            details += "\nThis repository contains a GitHub Actions workflow. Install the updated app, reconnect GitHub, and approve the requested workflow scope. Your local commit is safe; retry Push afterward.";
+        }
+        else if (details.Contains("Authentication failed", StringComparison.OrdinalIgnoreCase) ||
+                 details.Contains("403", StringComparison.OrdinalIgnoreCase))
         {
             details += "\nReconnect GitHub and verify repository/organization permissions.";
         }

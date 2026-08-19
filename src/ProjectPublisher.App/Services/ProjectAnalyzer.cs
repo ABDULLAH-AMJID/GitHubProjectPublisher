@@ -126,21 +126,33 @@ public sealed class ProjectAnalyzer
             }
         }
 
-        var projectFile = files.FirstOrDefault(f => Path.GetExtension(f).Equals(".csproj", StringComparison.OrdinalIgnoreCase));
-        if (projectFile is not null)
+        var dotNetProjects = new List<(int Priority, string Type, string Relative, string? RunCommand, string? PreviewUrl)>();
+        foreach (var projectFile in files.Where(f =>
+                     Path.GetExtension(f).Equals(".csproj", StringComparison.OrdinalIgnoreCase)))
         {
             var text = await File.ReadAllTextAsync(projectFile, cancellationToken);
             var relative = Path.GetRelativePath(root, projectFile);
-            if (text.Contains("Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase))
-                return ("ASP.NET Core web app", relative,
-                    $"dotnet run --project \"{relative}\" --no-launch-profile", "http://127.0.0.1:5199");
+            var testPenalty = relative.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                .Any(part => part.Equals("test", StringComparison.OrdinalIgnoreCase) ||
+                             part.Equals("tests", StringComparison.OrdinalIgnoreCase)) ? 50 : 0;
+
             if (text.Contains("<UseWPF>true", StringComparison.OrdinalIgnoreCase))
-                return ("WPF desktop app", relative, null, null);
-            if (text.Contains("Microsoft.WindowsAppSDK", StringComparison.OrdinalIgnoreCase))
-                return ("WinUI 3 desktop app", relative, null, null);
-            if (text.Contains("<UseWindowsForms>true", StringComparison.OrdinalIgnoreCase))
-                return ("Windows Forms desktop app", relative, null, null);
-            return (".NET project", relative, null, null);
+                dotNetProjects.Add((100 - testPenalty, "WPF desktop app", relative, null, null));
+            else if (text.Contains("Microsoft.WindowsAppSDK", StringComparison.OrdinalIgnoreCase))
+                dotNetProjects.Add((95 - testPenalty, "WinUI 3 desktop app", relative, null, null));
+            else if (text.Contains("<UseWindowsForms>true", StringComparison.OrdinalIgnoreCase))
+                dotNetProjects.Add((90 - testPenalty, "Windows Forms desktop app", relative, null, null));
+            else if (text.Contains("Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase))
+                dotNetProjects.Add((85 - testPenalty, "ASP.NET Core web app", relative,
+                    $"dotnet run --project \"{relative}\" --no-launch-profile", "http://127.0.0.1:5199"));
+            else
+                dotNetProjects.Add((10 - testPenalty, ".NET project", relative, null, null));
+        }
+
+        if (dotNetProjects.Count > 0)
+        {
+            var selected = dotNetProjects.OrderByDescending(project => project.Priority).First();
+            return (selected.Type, selected.Relative, selected.RunCommand, selected.PreviewUrl);
         }
 
         var html = files.FirstOrDefault(f => Path.GetFileName(f).Equals("index.html", StringComparison.OrdinalIgnoreCase));

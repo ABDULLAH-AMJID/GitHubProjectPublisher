@@ -299,6 +299,7 @@ node_modules/
 venv/
 bin/
 obj/
+artifacts/
 __pycache__/
 
 """;
@@ -414,6 +415,7 @@ __pycache__/
         builder.AppendLine("obj/");
         builder.AppendLine("dist/");
         builder.AppendLine("build/");
+        builder.AppendLine("artifacts/");
         builder.AppendLine("coverage/");
         builder.AppendLine("__pycache__/");
         foreach (var path in protectedPaths.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
